@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.untizio.controller.StudentEditDialogController">
+    <content>
+        <GridPane hgap="10" vgap="10">
+            <Label text="Nome:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="nomeField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            
+            <Label text="Cognome:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="cognomeField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            
+            <Label text="Data di Nascita:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="dataNascitaField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            
+            <Label text="Classe:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="classeField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            
+            <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                <Button text="OK" onAction="#handleOk"/>
+                <Button text="Cancel" onAction="#handleCancel"/>
+            </HBox>
+        </GridPane>
+    </content>
+</DialogPane>

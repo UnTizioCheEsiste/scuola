@@ -4,6 +4,8 @@ import com.untizio.App;
 import com.untizio.model.Student;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -71,6 +73,48 @@ public class StudentOverviewController {
             cognomeLabel.setText("");
             dataNascitaLabel.setText("");
             classeLabel.setText("");
+        }
+    }
+
+    @FXML
+    private void handleDeleteStudent() {
+        int selectedIndex = studentTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex >= 0) {
+            studentTable.getItems().remove(selectedIndex);
+        } else {
+            // Show a warning alert if no student is selected
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Student Selected");
+            alert.setContentText("Please select a student in the table.");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void handleAddStudent() {
+        Student tempStudent = new Student(0, "", "", "", "");
+        boolean okClicked = app.showStudentEditDialog(tempStudent);
+        if (okClicked) {
+            app.getStudentData().add(tempStudent);
+        }
+    }
+
+    @FXML
+    private void handleEditStudent() {
+        Student selectedStudent = studentTable.getSelectionModel().getSelectedItem();
+        if (selectedStudent != null) {
+            boolean okClicked = app.showStudentEditDialog(selectedStudent);
+            if (okClicked) {
+                showStudentDetails(selectedStudent);
+            }
+        } else {
+            // Show a warning alert if no student is selected
+            Alert alert = new Alert(AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Student Selected");
+            alert.setContentText("Please select a student in the table.");
+            alert.showAndWait();
         }
     }
 }

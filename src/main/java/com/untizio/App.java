@@ -2,6 +2,7 @@ package com.untizio;
 
 import java.io.IOException;
 
+import com.untizio.controller.StudentEditDialogController;
 import com.untizio.controller.StudentOverviewController;
 import com.untizio.model.Student;
 
@@ -10,8 +11,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.DialogPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -85,6 +88,39 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    /**
+     * Opens a dialog to edit details for the specified student. 
+     * If the user clicks Conferma, the changes are saved into the provided student object.
+     *
+     * @param student the student object to be edited
+     * @return true if the user clicked OK, false otherwise
+     */
+    public boolean showStudentEditDialog(Student student) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("view/StudentEditDialog.fxml"));
+            DialogPane page = (DialogPane) loader.load();
+    
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Edit Student");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+    
+            StudentEditDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setStudent(student);
+    
+            dialogStage.showAndWait();
+    
+            return controller.isOkClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }
