@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="720.0" minWidth="1280.0" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.untizio.controller.StudentOverviewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.untizio.controller.StudentOverviewController">
    <children>
       <SplitPane dividerPositions="0.5" layoutX="173.0" layoutY="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -64,9 +64,9 @@
                   </GridPane>
                   <ButtonBar layoutX="342.0" layoutY="652.0" prefHeight="40.0" prefWidth="200.0">
                     <buttons>
-                      <Button mnemonicParsing="false" text="New" onAction="#handleAddStudent"/>
-                        <Button mnemonicParsing="false" text="Edit" onAction="#handleEditStudent"/>
-                        <Button mnemonicParsing="false" text="Delete" onAction="#handleDeleteStudent"/>
+                      <Button mnemonicParsing="false" onAction="#handleAddStudent" text="New" />
+                        <Button mnemonicParsing="false" onAction="#handleEditStudent" text="Edit" />
+                        <Button mnemonicParsing="false" onAction="#handleDeleteStudent" text="Delete" />
                     </buttons>
                   </ButtonBar>
                </children>

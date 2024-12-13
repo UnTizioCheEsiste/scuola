@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.untizio.controller.RootLayoutController;
 import com.untizio.controller.StudentEditDialogController;
 import com.untizio.controller.StudentOverviewController;
 import com.untizio.model.Student;
@@ -51,6 +52,8 @@ public class App extends Application {
         this.primaryStage.setTitle("Gestionale Scuola By UnTizio");
         initRootLayout();
         showPersonOverview();
+
+        this.primaryStage.setResizable(false);
     }
 
     /**
@@ -62,13 +65,28 @@ public class App extends Application {
     public void initRootLayout()
     {
         try {
+        // Load root layout from fxml file.
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(App.class.getResource("view/RootLayout.fxml"));
         rootLayout = (BorderPane) loader.load();
+
+        // Show the scene containing the root layout.
         Scene scene = new Scene(rootLayout);
         primaryStage.setScene(scene);
+
+        // Give the controller access to the main app.
+        RootLayoutController controller = loader.getController();
+        controller.setApp(this);
         primaryStage.show();
-    } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Try to load last opened student file.
+        File file = getStudentFilePath();
+        if (file != null) {
+            loadStudentDataFromFile(file);
+        }
     }
 
     /**
@@ -182,6 +200,7 @@ public class App extends Application {
             alert.setHeaderText("Could not load data");
             alert.setContentText("Could not load data from file:\n" + file.getPath());
             alert.showAndWait();
+            System.out.println(e);
         }
     }
     
@@ -199,6 +218,7 @@ public class App extends Application {
             alert.setHeaderText("Could not save data");
             alert.setContentText("Could not save data to file:\n" + file.getPath());
             alert.showAndWait();
+            System.out.println(e);
         }
     }
 }
