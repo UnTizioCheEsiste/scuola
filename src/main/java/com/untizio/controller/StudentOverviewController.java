@@ -1,5 +1,9 @@
 package com.untizio.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 import com.untizio.App;
 import com.untizio.model.Student;
 
@@ -106,6 +110,37 @@ public class StudentOverviewController {
         studentTable.setItems(sortedData);
     }
 
+    private boolean isInputValid(Student student) {
+        String errorMessage = "";
+
+        if (student.getNome() == null || student.getNome().isEmpty() || !student.getNome().matches("[a-zA-Z]+")) {
+            errorMessage += "Nome non valido! Deve contenere solo lettere.\n";
+        }
+        if (student.getCognome() == null || student.getCognome().isEmpty() || !student.getCognome().matches("[a-zA-Z]+")) {
+            errorMessage += "Cognome non valido! Deve contenere solo lettere.\n";
+        }
+        if (student.getDataNascita() == null || student.getDataNascita().isEmpty()) {
+            errorMessage += "Data di nascita non valida!\n";
+        } else {
+            try {
+                LocalDate.parse(student.getDataNascita(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            } catch (DateTimeParseException e) {
+                errorMessage += "Formato della data di nascita non valido. Usa il formato yyyy-MM-dd!\n";
+            }
+        }
+
+        if (errorMessage.isEmpty()) {
+            return true;
+        } else {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Campi non validi");
+            alert.setHeaderText("Per favore correggi i campi non validi");
+            alert.setContentText(errorMessage);
+            alert.showAndWait();
+            return false;
+        }
+    }
+
     private void showStudentDetails(Student student) {
         if (student != null) {
             idLabel.setText(Integer.toString(student.getId()));
@@ -144,7 +179,9 @@ public class StudentOverviewController {
         Student tempStudent = new Student(lastStudentId, "", "", "", "");
         boolean okClicked = app.showStudentEditDialog(tempStudent);
         if (okClicked) {
-            app.getStudentData().add(tempStudent);
+            if (isInputValid(tempStudent)) {
+                app.getStudentData().add(tempStudent);
+            }
         }
     }
 
@@ -154,7 +191,9 @@ public class StudentOverviewController {
         if (selectedStudent != null) {
             boolean okClicked = app.showStudentEditDialog(selectedStudent);
             if (okClicked) {
-                showStudentDetails(selectedStudent);
+                if (isInputValid(selectedStudent)) {
+                    showStudentDetails(selectedStudent);
+                }
             }
         } else {
             // Show a warning alert if no student is selected
