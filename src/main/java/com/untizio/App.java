@@ -36,10 +36,7 @@ public class App extends Application {
     private BorderPane rootLayout;
     private ObservableList<Student> studentData = FXCollections.observableArrayList();
 
-    public App() 
-    {
-        studentData.add(new Student(0, "Paolino", "Merlino", "20020110", "2A"));
-    }
+    public App() { }
 
     public ObservableList<Student> getStudentData() 
     {
@@ -51,7 +48,7 @@ public class App extends Application {
         this.primaryStage = stage;
         this.primaryStage.setTitle("Gestionale Scuola By UnTizio");
         initRootLayout();
-        showPersonOverview();
+        showStudentOverview();
 
         this.primaryStage.setResizable(false);
     }
@@ -95,12 +92,12 @@ public class App extends Application {
      * as the center of the root layout. If an IOException occurs during loading, the stack
      * trace is printed.
      */
-    public void showPersonOverview() {
+    public void showStudentOverview() {
     try {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(App.class.getResource("view/StudentOverview.fxml"));
-        AnchorPane personOverview = (AnchorPane) loader.load();
-        rootLayout.setCenter(personOverview);
+        AnchorPane studentOverview = (AnchorPane) loader.load();
+        rootLayout.setCenter(studentOverview);
 
         // Give the controller access to the main app.
         StudentOverviewController controller = loader.getController();
@@ -151,7 +148,7 @@ public class App extends Application {
     }
 
     /**
-    * Returnsthe person file preference, i.e. the file that waslast opened.
+    * Returnsthe student file preference, i.e. the file that waslast opened.
     * preference can be found, null is returned.
     * The preference is read from the OS specific registry. If no such
     *
