@@ -8,6 +8,7 @@ import com.untizio.App;
 import com.untizio.model.Course;
 import com.untizio.model.Student;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -160,12 +161,19 @@ public class StudentOverviewController {
             cognomeLabel.setText(student.getCognome());
             dataNascitaLabel.setText(student.getDataNascita());
             classeLabel.setText(student.getClasse());
+
+            // Set the course table items
+            ObservableList<Course> courses = FXCollections.observableArrayList(student.getCorsi());
+            courseTable.setItems(courses);
         } else {
             idLabel.setText("");
             nomeLabel.setText("");
             cognomeLabel.setText("");
             dataNascitaLabel.setText("");
             classeLabel.setText("");
+
+            // Clear the course table
+            courseTable.setItems(null);
         }
     }
 
