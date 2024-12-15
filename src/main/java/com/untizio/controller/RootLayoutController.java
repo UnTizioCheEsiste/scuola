@@ -32,7 +32,7 @@ public class RootLayoutController {
      * Creates an empty student list.
      */
     @FXML
-    private void handleNew() {
+    private void handleNewStudent() {
         app.getStudentData().clear();
         app.setStudentFilePath(null);
     }
@@ -41,7 +41,7 @@ public class RootLayoutController {
      * Opens a FileChooser to let the user select a student list to load.
      */
     @FXML
-    private void handleOpen() {
+    private void handleOpenStudent() {
         FileChooser fileChooser = new FileChooser();
 
         // Set extension filter
@@ -67,12 +67,12 @@ public class RootLayoutController {
      * open file, the "save as" dialog is shown.
      */
     @FXML
-    private void handleSave() {
+    private void handleSaveStudent() {
         File studentFile = app.getStudentFilePath();
         if (studentFile != null) {
             app.saveStudentDataToFile(studentFile);
         } else {
-            handleSaveAs();
+            handleSaveAsStudent();
         }
     }
 
@@ -80,7 +80,7 @@ public class RootLayoutController {
      * Opens a FileChooser to let the user select a file to save to.
      */
     @FXML
-    private void handleSaveAs() {
+    private void handleSaveAsStudent() {
         FileChooser fileChooser = new FileChooser();
 
         // Set extension filter
@@ -115,13 +115,5 @@ public class RootLayoutController {
         alert.setHeaderText("About");
         alert.setContentText("Author: Nicolò Ciancaglia\nGitHub: github.com/UnTizioCheEsiste");
         alert.showAndWait();
-    }
-
-    /**
-     * Closes the application.
-     */
-    @FXML
-    private void handleExit() {
-        System.exit(0);
     }
 }

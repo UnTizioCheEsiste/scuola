@@ -14,11 +14,30 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#handleNew" text="New" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Open" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleSaveAs" text="Save as" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
+                  <Menu mnemonicParsing="false" text="Studenti">
+                    <items>
+                    <MenuItem mnemonicParsing="false" onAction="#handleNewStudent" text="New" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleOpenStudent" text="Open" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveStudent" text="Save" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveAsStudent" text="Save as" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Insegnanti">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="New" />
+                        <MenuItem mnemonicParsing="false" text="Open" />
+                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" text="Save as" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Corsi">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="New" />
+                        <MenuItem mnemonicParsing="false" text="Open" />
+                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" text="Save as" />
+                     </items>
+                  </Menu>
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.untizio.controller.StudentEditDialogController">
+<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.untizio.controller.TeacherEditDialogController">
     <content>
         <GridPane hgap="10" vgap="10">
             <Label text="Nome:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
@@ -18,13 +18,10 @@
             <Label text="Cognome:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <TextField fx:id="cognomeField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             
-            <Label text="Data di Nascita:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <TextField fx:id="dataNascitaField" promptText="YYYY-MM-DD" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Materia" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <TextField fx:id="materiaField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             
-            <Label text="Classe:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <TextField fx:id="classeField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            
-            <HBox alignment="CENTER_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <HBox alignment="CENTER_RIGHT" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="3">
                 <Button onAction="#handleOk" text="OK" />
                 <Button onAction="#handleCancel" text="Cancel" />
             </HBox>
@@ -33,7 +30,6 @@
             <ColumnConstraints />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints />
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />

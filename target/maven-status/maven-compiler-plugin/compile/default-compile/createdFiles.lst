@@ -1,6 +1,0 @@
-module-info.class
-com\untizio\model\Student.class
-com\untizio\controller\StudentOverviewController.class
-com\untizio\model\Teacher.class
-com\untizio\App.class
-com\untizio\model\Course.class

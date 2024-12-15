@@ -12,7 +12,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.untizio.controller.RootLayoutController;
 import com.untizio.controller.StudentEditDialogController;
 import com.untizio.controller.StudentOverviewController;
+import com.untizio.controller.TeacherEditDialogController;
+import com.untizio.controller.TeacherOverviewController;
 import com.untizio.model.Student;
+import com.untizio.model.Teacher;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -37,12 +40,17 @@ public class App extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     private ObservableList<Student> studentData = FXCollections.observableArrayList();
+    private ObservableList<Teacher> teacherData = FXCollections.observableArrayList();
 
     public App() { }
 
     public ObservableList<Student> getStudentData() 
     {
         return studentData;
+    }
+
+    public ObservableList<Teacher> getTeacherData() {
+        return teacherData;
     }
 
     @Override
@@ -53,6 +61,7 @@ public class App extends Application {
         if (rootLayout != null) 
         {
             showStudentOverview();
+            showTeacherOverview();
         }
 
         this.primaryStage.setResizable(false);
@@ -120,13 +129,29 @@ public class App extends Application {
     } catch (IOException e) { e.printStackTrace(); }
     }
 
-    public Stage getPrimaryStage() 
-    {
-        return primaryStage;
-    }
+    public void showTeacherOverview() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("view/TeacherOverview.fxml"));
+            AnchorPane teacherOverview = loader.load();
 
-    public static void main(String[] args) {
-        launch(args);
+            TabPane tabPane = (TabPane) rootLayout.getCenter();
+            Tab teacherTab = tabPane.getTabs().get(1);
+            AnchorPane teacherContent = (AnchorPane) teacherTab.getContent();
+
+            teacherContent.getChildren().clear();
+            teacherContent.getChildren().add(teacherOverview);
+            AnchorPane.setTopAnchor(teacherOverview, 0.0);
+            AnchorPane.setBottomAnchor(teacherOverview, 0.0);
+            AnchorPane.setLeftAnchor(teacherOverview, 0.0);
+            AnchorPane.setRightAnchor(teacherOverview, 0.0);
+
+            // Give the controller access to the main app.
+            TeacherOverviewController controller = loader.getController();
+            controller.setApp(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -143,7 +168,7 @@ public class App extends Application {
             DialogPane page = (DialogPane) loader.load();
     
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Edit Student");
+            dialogStage.setTitle("Modifica Studente");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
@@ -152,6 +177,32 @@ public class App extends Application {
             StudentEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setStudent(student);
+    
+            dialogStage.showAndWait();
+    
+            return controller.isOkClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean showTeacherEditDialog(Teacher teacher) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("view/TeacherEditDialog.fxml"));
+            DialogPane page = loader.load(); // Cambia AnchorPane a DialogPane
+    
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Modifica Insegnante");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+    
+            TeacherEditDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setTeacher(teacher);
     
             dialogStage.showAndWait();
     
@@ -232,5 +283,72 @@ public class App extends Application {
             alert.showAndWait();
             System.out.println(e);
         }
+    }
+
+    public File getTeacherFilePath() {
+        Preferences prefs = Preferences.userNodeForPackage(App.class);
+        String filePath = prefs.get("teacherFilePath", null);
+        if (filePath != null) {
+            return new File(filePath);
+        } else {
+            return null;
+        }
+    }
+
+    public void setTeacherFilePath(File file) {
+        Preferences prefs = Preferences.userNodeForPackage(App.class);
+        if (file != null) {
+            prefs.put("teacherFilePath", file.getPath());
+            primaryStage.setTitle("Gestionale Scuola By UnTizio - " + file.getName());
+        } else {
+            prefs.remove("teacherFilePath");
+            primaryStage.setTitle("Gestionale Scuola By UnTizio");
+        }
+    }
+
+    public void loadTeacherDataFromFile(File file) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            List<Teacher> teacherList = mapper.readValue(file, new TypeReference<List<Teacher>>() {});
+            teacherData.clear();
+            teacherData.addAll(teacherList);
+
+            setTeacherFilePath(file);
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Non è stato possibile caricare i dati");
+            alert.setContentText("Non è stato possibile caricare i dati dal file:\n" + file.getPath());
+
+            alert.showAndWait();
+        }
+    }
+
+    public void saveTeacherDataToFile(File file) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            mapper.writeValue(file, teacherData);
+
+            setTeacherFilePath(file);
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Non è stato possibile salvare i dati");
+            alert.setContentText("Non è stato possibile salvare i dati nel file:\n" + file.getPath());
+
+            alert.showAndWait();
+        }
+    }
+
+    public Stage getPrimaryStage() 
+    {
+        return primaryStage;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
