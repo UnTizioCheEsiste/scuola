@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -29,17 +28,17 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <TextField layoutX="6.0" layoutY="14.0" prefHeight="31.0" prefWidth="627.0" AnchorPane.bottomAnchor="682.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" fx:id="searchField" promptText="Cerca..."/>
+                  <TextField fx:id="searchField" layoutX="6.0" layoutY="14.0" prefHeight="31.0" prefWidth="627.0" promptText="Cerca..." AnchorPane.bottomAnchor="682.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>
           <AnchorPane>
                <children>
-                  <Label layoutX="92.0" layoutY="59.0" text="Dettagli Studente" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+                  <Label layoutX="75.0" layoutY="50.0" text="Informazioni Studente" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="50.0">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <GridPane layoutX="218.0" layoutY="314.0">
+                  <GridPane layoutX="75.0" layoutY="78.0">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -64,13 +63,24 @@
                         <Label fx:id="classeLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
                   </GridPane>
-                  <ButtonBar layoutX="342.0" layoutY="652.0" prefHeight="40.0" prefWidth="200.0">
-                    <buttons>
-                      <Button mnemonicParsing="false" onAction="#handleAddStudent" text="New" />
-                        <Button mnemonicParsing="false" onAction="#handleEditStudent" text="Edit" />
-                        <Button mnemonicParsing="false" onAction="#handleDeleteStudent" text="Delete" />
-                    </buttons>
-                  </ButtonBar>
+                  <Button layoutX="320.0" layoutY="78.0" mnemonicParsing="false" onAction="#handleAddStudent" prefHeight="150.0" prefWidth="121.0" text="Nuovo studente" textFill="#2a9400">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button layoutX="441.0" layoutY="78.0" mnemonicParsing="false" onAction="#handleEditStudent" prefHeight="75.0" prefWidth="121.0" text="Modifica Studente" textFill="#976f00" />
+                  <Button layoutX="441.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleDeleteStudent" prefHeight="75.0" prefWidth="121.0" text="Cancella Studente" textFill="#9e0000" />
+                  <TableView layoutX="75.0" layoutY="329.0" prefHeight="333.0" prefWidth="487.0" fx:id="courseTable">
+                    <columns>
+                      <TableColumn prefWidth="156.0" fx:id="courseNameColumn" text="Nome Corso"/>
+                      <TableColumn prefWidth="330.0" fx:id="courseDescriptionColumn" text="Descrizione Corso" />
+                    </columns>
+                  </TableView>
+                  <Label layoutX="75.0" layoutY="303.0" text="Corsi Studente">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
         </items>

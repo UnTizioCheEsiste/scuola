@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import com.untizio.App;
+import com.untizio.model.Course;
 import com.untizio.model.Student;
 
 import javafx.collections.ObservableList;
@@ -32,6 +33,13 @@ public class StudentOverviewController {
     private TableColumn<Student, String> cognomeColumn;
 
     @FXML
+    private TableView<Course> courseTable;
+    @FXML
+    private TableColumn<Course, String> courseNameColumn;
+    @FXML
+    private TableColumn<Course, String> courseDescriptionColumn;
+
+    @FXML
     private Label idLabel;
     @FXML
     private Label nomeLabel;
@@ -56,6 +64,10 @@ public class StudentOverviewController {
         idColumn.setCellValueFactory(cellData -> cellData.getValue().idProperty());
         nomeColumn.setCellValueFactory(cellData -> cellData.getValue().nomeProperty());
         cognomeColumn.setCellValueFactory(cellData -> cellData.getValue().cognomeProperty());
+
+        // Initialize the course table with the columns.
+        courseNameColumn.setCellValueFactory(cellData -> cellData.getValue().nomeProperty());
+        courseDescriptionColumn.setCellValueFactory(cellData -> cellData.getValue().descrizioneProperty());
 
         // Clear student details.
         showStudentDetails(null);
