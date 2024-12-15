@@ -18,7 +18,7 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <TableView fx:id="studentTable" layoutX="-25.0" layoutY="54.0" prefHeight="398.0" prefWidth="175.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+                  <TableView fx:id="studentTable" layoutX="-25.0" layoutY="52.0" prefHeight="666.0" prefWidth="636.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0">
                     <columns>
                         <TableColumn fx:id="idColumn" prefWidth="183.0" text="ID" />
                       <TableColumn fx:id="nomeColumn" prefWidth="183.0" text="Nome" />
@@ -28,7 +28,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                  <TextField fx:id="searchField" layoutX="6.0" layoutY="14.0" prefHeight="31.0" prefWidth="627.0" promptText="Cerca..." AnchorPane.bottomAnchor="682.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                  <TextField fx:id="searchField" layoutX="5.0" layoutY="33.0" prefHeight="31.0" prefWidth="627.0" promptText="Cerca..." AnchorPane.bottomAnchor="654.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" />
                </children>
             </AnchorPane>
           <AnchorPane>
@@ -70,10 +70,10 @@
                   </Button>
                   <Button layoutX="441.0" layoutY="78.0" mnemonicParsing="false" onAction="#handleEditStudent" prefHeight="75.0" prefWidth="121.0" text="Modifica Studente" textFill="#976f00" />
                   <Button layoutX="441.0" layoutY="153.0" mnemonicParsing="false" onAction="#handleDeleteStudent" prefHeight="75.0" prefWidth="121.0" text="Cancella Studente" textFill="#9e0000" />
-                  <TableView layoutX="75.0" layoutY="329.0" prefHeight="333.0" prefWidth="487.0" fx:id="courseTable">
+                  <TableView fx:id="courseTable" layoutX="75.0" layoutY="329.0" prefHeight="333.0" prefWidth="487.0">
                     <columns>
-                      <TableColumn prefWidth="156.0" fx:id="courseNameColumn" text="Nome Corso"/>
-                      <TableColumn prefWidth="330.0" fx:id="courseDescriptionColumn" text="Descrizione Corso" />
+                      <TableColumn fx:id="courseNameColumn" prefWidth="156.0" text="Nome Corso" />
+                      <TableColumn fx:id="courseDescriptionColumn" prefWidth="330.0" text="Descrizione Corso" />
                     </columns>
                   </TableView>
                   <Label layoutX="75.0" layoutY="303.0" text="Corsi Studente">

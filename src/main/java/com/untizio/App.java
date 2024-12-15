@@ -22,6 +22,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -48,7 +50,10 @@ public class App extends Application {
         this.primaryStage = stage;
         this.primaryStage.setTitle("Gestionale Scuola By UnTizio");
         initRootLayout();
-        showStudentOverview();
+        if (rootLayout != null) 
+        {
+            showStudentOverview();
+        }
 
         this.primaryStage.setResizable(false);
     }
@@ -97,7 +102,17 @@ public class App extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(App.class.getResource("view/StudentOverview.fxml"));
         AnchorPane studentOverview = (AnchorPane) loader.load();
-        rootLayout.setCenter(studentOverview);
+
+        TabPane tabPane = (TabPane) rootLayout.getCenter();
+        Tab studentTab = tabPane.getTabs().get(0);
+        AnchorPane studentContent = (AnchorPane) studentTab.getContent();
+
+        studentContent.getChildren().clear();
+        studentContent.getChildren().add(studentOverview);
+        AnchorPane.setTopAnchor(studentOverview, 0.0);
+        AnchorPane.setBottomAnchor(studentOverview, 0.0);
+        AnchorPane.setLeftAnchor(studentOverview, 0.0);
+        AnchorPane.setRightAnchor(studentOverview, 0.0);
 
         // Give the controller access to the main app.
         StudentOverviewController controller = loader.getController();
@@ -156,7 +171,7 @@ public class App extends Application {
     */
     public File getStudentFilePath() {
         Preferences prefs = Preferences.userNodeForPackage(App.class);
-        String filePath = prefs.get("filePath", null);
+        String filePath = prefs.get("filePathStudent", null);
         if (filePath != null) {
             return new File(filePath);
         } else {
@@ -173,11 +188,11 @@ public class App extends Application {
     public void setStudentFilePath(File file) {
         Preferences prefs = Preferences.userNodeForPackage(App.class);
         if (file != null) {
-            prefs.put("filePath", file.getPath());
+            prefs.put("filePathStudent", file.getPath());
             // Update the stage title.
             primaryStage.setTitle("Scuola - " + file.getName());
         } else {
-                prefs.remove("filePath");
+                prefs.remove("filePathStudent");
                 // Update the stage title.
                 primaryStage.setTitle("Scuola");
         }
