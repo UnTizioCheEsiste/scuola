@@ -106,6 +106,74 @@ public class RootLayoutController {
     }
 
     /**
+     * Creates an empty teacher list.
+     */
+    @FXML
+    private void handleNewTeacher() {
+        app.getTeacherData().clear();
+        app.setTeacherFilePath(null);
+    }
+
+    /**
+     * Opens a FileChooser to let the user select a teacher list to load.
+     */
+    @FXML
+    private void handleOpenTeacher() {
+        FileChooser fileChooser = new FileChooser();
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "Json files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        File teacherFile = app.getTeacherFilePath();
+        if (teacherFile != null) {
+            fileChooser.initialFileNameProperty().set(teacherFile.getName());
+        }
+
+        // Show open file dialog
+        File file = fileChooser.showOpenDialog(app.getPrimaryStage());
+
+        if (file != null) {
+            app.loadTeacherDataFromFile(file);
+        }
+    }
+
+    /**
+     * Saves the file to the teacher file that is currently open. If there is no
+     * open file, the "save as" dialog is shown.
+     */
+    @FXML
+    private void handleSaveTeacher() {
+        File teacherFile = app.getTeacherFilePath();
+        if (teacherFile != null) {
+            app.saveTeacherDataToFile(teacherFile);
+        } else {
+            handleSaveAsTeacher();
+        }
+    }
+
+    /**
+     * Opens a FileChooser to let the user select a file to save to.
+     */
+    @FXML
+    private void handleSaveAsTeacher() {
+        FileChooser fileChooser = new FileChooser();
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "Json files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show save file dialog
+        File file = fileChooser.showSaveDialog(app.getPrimaryStage());
+
+        if (file != null) {
+            app.saveTeacherDataToFile(file);
+        }
+    }
+
+    /**
      * Opens an about dialog.
      */
     @FXML

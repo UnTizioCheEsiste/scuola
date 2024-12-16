@@ -9,11 +9,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.untizio.controller.CourseEditDialogController;
+import com.untizio.controller.CourseOverviewController;
 import com.untizio.controller.RootLayoutController;
 import com.untizio.controller.StudentEditDialogController;
 import com.untizio.controller.StudentOverviewController;
 import com.untizio.controller.TeacherEditDialogController;
 import com.untizio.controller.TeacherOverviewController;
+import com.untizio.model.Course;
 import com.untizio.model.Student;
 import com.untizio.model.Teacher;
 
@@ -32,20 +35,17 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-/**
- * JavaFX App
- */
 public class App extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
     private ObservableList<Student> studentData = FXCollections.observableArrayList();
     private ObservableList<Teacher> teacherData = FXCollections.observableArrayList();
+    private ObservableList<Course> courseData = FXCollections.observableArrayList();
 
     public App() { }
 
-    public ObservableList<Student> getStudentData() 
-    {
+    public ObservableList<Student> getStudentData() {
         return studentData;
     }
 
@@ -53,80 +53,83 @@ public class App extends Application {
         return teacherData;
     }
 
+    public ObservableList<Course> getCourseData() {
+        return courseData;
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         this.primaryStage = stage;
         this.primaryStage.setTitle("Gestionale Scuola By UnTizio");
         initRootLayout();
-        if (rootLayout != null) 
-        {
+        if (rootLayout != null) {
             showStudentOverview();
             showTeacherOverview();
+            showCourseOverview();
+        }
+
+        // Try to load last opened student file.
+        File studentFile = getStudentFilePath();
+        if (studentFile != null) {
+            loadStudentDataFromFile(studentFile);
+        }
+
+        // Try to load last opened teacher file.
+        File teacherFile = getTeacherFilePath();
+        if (teacherFile != null) {
+            loadTeacherDataFromFile(teacherFile);
+        }
+
+        // Try to load last opened course file.
+        File courseFile = getCourseFilePath();
+        if (courseFile != null) {
+            loadCourseDataFromFile(courseFile);
         }
 
         this.primaryStage.setResizable(false);
     }
 
-    /**
-     * Initializes the root layout by loading it from the FXML file and setting it as the scene of the primary stage.
-     * This method attempts to load the "RootLayout.fxml" file using the FXMLLoader.
-     * If successful, it sets the loaded BorderPane as the root layout and displays it in the primary stage.
-     * If an IOException occurs during loading, the stack trace is printed.
-     */
-    public void initRootLayout()
-    {
+    public void initRootLayout() {
         try {
-        // Load root layout from fxml file.
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(App.class.getResource("view/RootLayout.fxml"));
-        rootLayout = (BorderPane) loader.load();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("view/RootLayout.fxml"));
+            rootLayout = loader.load();
 
-        // Show the scene containing the root layout.
-        Scene scene = new Scene(rootLayout);
-        primaryStage.setScene(scene);
+            Scene scene = new Scene(rootLayout);
+            primaryStage.setScene(scene);
 
-        // Give the controller access to the main app.
-        RootLayoutController controller = loader.getController();
-        controller.setApp(this);
-        primaryStage.show();
+            RootLayoutController controller = loader.getController();
+            controller.setApp(this);
+
+            primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // Try to load last opened student file.
-        File file = getStudentFilePath();
-        if (file != null) {
-            loadStudentDataFromFile(file);
-        }
     }
 
-    /**
-     * Loads and displays the StudentOverview.fxml file in the center of the root layout.
-     * This method uses an FXMLLoader to load the FXML file and sets the loaded AnchorPane
-     * as the center of the root layout. If an IOException occurs during loading, the stack
-     * trace is printed.
-     */
     public void showStudentOverview() {
-    try {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(App.class.getResource("view/StudentOverview.fxml"));
-        AnchorPane studentOverview = (AnchorPane) loader.load();
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("view/StudentOverview.fxml"));
+            AnchorPane studentOverview = loader.load();
 
-        TabPane tabPane = (TabPane) rootLayout.getCenter();
-        Tab studentTab = tabPane.getTabs().get(0);
-        AnchorPane studentContent = (AnchorPane) studentTab.getContent();
+            TabPane tabPane = (TabPane) rootLayout.getCenter();
+            Tab studentTab = tabPane.getTabs().get(0);
+            AnchorPane studentContent = (AnchorPane) studentTab.getContent();
 
-        studentContent.getChildren().clear();
-        studentContent.getChildren().add(studentOverview);
-        AnchorPane.setTopAnchor(studentOverview, 0.0);
-        AnchorPane.setBottomAnchor(studentOverview, 0.0);
-        AnchorPane.setLeftAnchor(studentOverview, 0.0);
-        AnchorPane.setRightAnchor(studentOverview, 0.0);
+            studentContent.getChildren().clear();
+            studentContent.getChildren().add(studentOverview);
+            AnchorPane.setTopAnchor(studentOverview, 0.0);
+            AnchorPane.setBottomAnchor(studentOverview, 0.0);
+            AnchorPane.setLeftAnchor(studentOverview, 0.0);
+            AnchorPane.setRightAnchor(studentOverview, 0.0);
 
-        // Give the controller access to the main app.
-        StudentOverviewController controller = loader.getController();
-        controller.setApp(this);
-    } catch (IOException e) { e.printStackTrace(); }
+            // Give the controller access to the main app.
+            StudentOverviewController controller = loader.getController();
+            controller.setApp(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showTeacherOverview() {
@@ -154,32 +157,50 @@ public class App extends Application {
         }
     }
 
-    /**
-     * Opens a dialog to edit details for the specified student. 
-     * If the user clicks Conferma, the changes are saved into the provided student object.
-     *
-     * @param student the student object to be edited
-     * @return true if the user clicked OK, false otherwise
-     */
+    public void showCourseOverview() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("view/CourseOverview.fxml"));
+            AnchorPane courseOverview = loader.load();
+
+            TabPane tabPane = (TabPane) rootLayout.getCenter();
+            Tab courseTab = tabPane.getTabs().get(2);
+            AnchorPane courseContent = (AnchorPane) courseTab.getContent();
+
+            courseContent.getChildren().clear();
+            courseContent.getChildren().add(courseOverview);
+            AnchorPane.setTopAnchor(courseOverview, 0.0);
+            AnchorPane.setBottomAnchor(courseOverview, 0.0);
+            AnchorPane.setLeftAnchor(courseOverview, 0.0);
+            AnchorPane.setRightAnchor(courseOverview, 0.0);
+
+            // Give the controller access to the main app.
+            CourseOverviewController controller = loader.getController();
+            controller.setApp(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean showStudentEditDialog(Student student) {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("view/StudentEditDialog.fxml"));
-            DialogPane page = (DialogPane) loader.load();
-    
+            AnchorPane page = loader.load();
+
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Modifica Studente");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
-    
+
             StudentEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setStudent(student);
-    
+
             dialogStage.showAndWait();
-    
+
             return controller.isOkClicked();
         } catch (IOException e) {
             e.printStackTrace();
@@ -191,21 +212,21 @@ public class App extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("view/TeacherEditDialog.fxml"));
-            DialogPane page = loader.load(); // Cambia AnchorPane a DialogPane
-    
+            DialogPane page = loader.load();
+
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Modifica Insegnante");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
-    
+
             TeacherEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setTeacher(teacher);
-    
+
             dialogStage.showAndWait();
-    
+
             return controller.isOkClicked();
         } catch (IOException e) {
             e.printStackTrace();
@@ -213,16 +234,36 @@ public class App extends Application {
         }
     }
 
-    /**
-    * Returnsthe student file preference, i.e. the file that waslast opened.
-    * preference can be found, null is returned.
-    * The preference is read from the OS specific registry. If no such
-    *
-    * @return
-    */
+    public boolean showCourseEditDialog(Course course) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("view/CourseEditDialog.fxml"));
+            DialogPane page = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Modifica Corso");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            CourseEditDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setCourse(course);
+            controller.setApp(this); // Pass the instance of App to the controller
+
+            dialogStage.showAndWait();
+
+            return controller.isOkClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public File getStudentFilePath() {
         Preferences prefs = Preferences.userNodeForPackage(App.class);
-        String filePath = prefs.get("filePathStudent", null);
+        String filePath = prefs.get("filePath", null);
         if (filePath != null) {
             return new File(filePath);
         } else {
@@ -230,22 +271,14 @@ public class App extends Application {
         }
     }
 
-    /**
-    * Sets the file path of the currently loaded file. The path is persisted in
-    * the OS specific registry.
-    *
-    * @param file the file or null to remove the path
-    */
     public void setStudentFilePath(File file) {
         Preferences prefs = Preferences.userNodeForPackage(App.class);
         if (file != null) {
-            prefs.put("filePathStudent", file.getPath());
-            // Update the stage title.
-            primaryStage.setTitle("Scuola - " + file.getName());
+            prefs.put("filePath", file.getPath());
+            primaryStage.setTitle("Gestionale Scuola By UnTizio - " + file.getName());
         } else {
-                prefs.remove("filePathStudent");
-                // Update the stage title.
-                primaryStage.setTitle("Scuola");
+            prefs.remove("filePath");
+            primaryStage.setTitle("Gestionale Scuola By UnTizio");
         }
     }
 
@@ -253,35 +286,36 @@ public class App extends Application {
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
-            studentData.setAll(
-                FXCollections.observableArrayList(mapper.readValue(file, new TypeReference<List<Student>>() {}))
-            );
+            List<Student> studentList = mapper.readValue(file, new TypeReference<List<Student>>() {});
+            studentData.clear();
+            studentData.addAll(studentList);
+
             setStudentFilePath(file);
-        } catch (Exception e) { // catches ANY exception
+        } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Could not load data");
-            alert.setContentText("Could not load data from file:\n" + file.getPath());
+            alert.setTitle("Errore");
+            alert.setHeaderText("Non è stato possibile caricare i dati");
+            alert.setContentText("Non è stato possibile caricare i dati dal file:\n" + file.getPath());
+
             alert.showAndWait();
-            System.out.println(e);
         }
     }
-    
+
     public void saveStudentDataToFile(File file) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             mapper.registerModule(new JavaTimeModule());
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
             mapper.writeValue(file, studentData);
-            // Save the file path to the registry.
+
             setStudentFilePath(file);
-        } catch (Exception e) { // catches ANY exception
+        } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Could not save data");
-            alert.setContentText("Could not save data to file:\n" + file.getPath());
+            alert.setTitle("Errore");
+            alert.setHeaderText("Non è stato possibile salvare i dati");
+            alert.setContentText("Non è stato possibile salvare i dati nel file:\n" + file.getPath());
+
             alert.showAndWait();
-            System.out.println(e);
         }
     }
 
@@ -343,8 +377,65 @@ public class App extends Application {
         }
     }
 
-    public Stage getPrimaryStage() 
-    {
+    public File getCourseFilePath() {
+        Preferences prefs = Preferences.userNodeForPackage(App.class);
+        String filePath = prefs.get("courseFilePath", null);
+        if (filePath != null) {
+            return new File(filePath);
+        } else {
+            return null;
+        }
+    }
+
+    public void setCourseFilePath(File file) {
+        Preferences prefs = Preferences.userNodeForPackage(App.class);
+        if (file != null) {
+            prefs.put("courseFilePath", file.getPath());
+            primaryStage.setTitle("Gestionale Scuola By UnTizio - " + file.getName());
+        } else {
+            prefs.remove("courseFilePath");
+            primaryStage.setTitle("Gestionale Scuola By UnTizio");
+        }
+    }
+
+    public void loadCourseDataFromFile(File file) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            List<Course> courseList = mapper.readValue(file, new TypeReference<List<Course>>() {});
+            courseData.clear();
+            courseData.addAll(courseList);
+
+            setCourseFilePath(file);
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Non è stato possibile caricare i dati");
+            alert.setContentText("Non è stato possibile caricare i dati dal file:\n" + file.getPath());
+
+            alert.showAndWait();
+        }
+    }
+
+    public void saveCourseDataToFile(File file) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            mapper.writeValue(file, courseData);
+
+            setCourseFilePath(file);
+        } catch (IOException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Errore");
+            alert.setHeaderText("Non è stato possibile salvare i dati");
+            alert.setContentText("Non è stato possibile salvare i dati nel file:\n" + file.getPath());
+
+            alert.showAndWait();
+        }
+    }
+
+    public Stage getPrimaryStage() {
         return primaryStage;
     }
 

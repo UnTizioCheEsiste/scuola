@@ -16,18 +16,18 @@
             <items>
                   <Menu mnemonicParsing="false" text="Studenti">
                     <items>
-                    <MenuItem mnemonicParsing="false" onAction="#handleNewStudent" text="New" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleOpenStudent" text="Open" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleSaveStudent" text="Save" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleSaveAsStudent" text="Save as" />
+                    <MenuItem mnemonicParsing="false" onAction="#handleNewStudent" text="Nuovo" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleOpenStudent" text="Apri" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveStudent" text="Salva" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveAsStudent" text="Salva come" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Insegnanti">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="New" />
-                        <MenuItem mnemonicParsing="false" text="Open" />
-                        <MenuItem mnemonicParsing="false" text="Save" />
-                        <MenuItem mnemonicParsing="false" text="Save as" />
+                      <MenuItem mnemonicParsing="false" onAction="#handleNewTeacher" text="Nuovo" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleOpenTeacher" text="Apri" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveTeacher" text="Salva" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveAsTeacher" text="Salva come" />
                     </items>
                   </Menu>
                   <Menu mnemonicParsing="false" text="Corsi">

@@ -1,26 +1,36 @@
 package com.untizio.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
-import java.util.ArrayList;
-import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Teacher {
-    private IntegerProperty id;
-    private StringProperty nome;
-    private StringProperty cognome;
-    private StringProperty materia;
-    private List<Course> corsiInsegnati;
 
-    public Teacher(int id, String nome, String cognome, String materia) {
+    private final IntegerProperty id;
+    private final StringProperty nome;
+    private final StringProperty cognome;
+    private final StringProperty materia;
+    private final ObservableList<Course> corsiInsegnati;
+
+    public Teacher() {
+        this(0, null, null, null, FXCollections.observableArrayList());
+    }
+
+    @JsonCreator
+    public Teacher(@JsonProperty("id") int id, @JsonProperty("nome") String nome, @JsonProperty("cognome") String cognome, @JsonProperty("materia") String materia, @JsonProperty("corsiInsegnati") List<Course> corsiInsegnati) {
         this.id = new SimpleIntegerProperty(id);
         this.nome = new SimpleStringProperty(nome);
         this.cognome = new SimpleStringProperty(cognome);
         this.materia = new SimpleStringProperty(materia);
-        this.corsiInsegnati = new ArrayList<>();
+        this.corsiInsegnati = FXCollections.observableArrayList(corsiInsegnati != null ? corsiInsegnati : FXCollections.observableArrayList());
     }
 
     public int getId() {
@@ -71,7 +81,7 @@ public class Teacher {
         return materia;
     }
 
-    public List<Course> getCorsiInsegnati() {
+    public ObservableList<Course> getCorsiInsegnati() {
         return corsiInsegnati;
     }
 
@@ -81,6 +91,10 @@ public class Teacher {
 
     public void rimuoviCorso(Course corso) {
         corsiInsegnati.remove(corso);
+    }
+
+    public void setCorsi(List<Course> courses) {
+        this.corsiInsegnati.setAll(courses != null ? courses : FXCollections.observableArrayList());
     }
 
     @Override

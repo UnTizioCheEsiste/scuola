@@ -1,7 +1,9 @@
 package com.untizio.model;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -15,12 +17,11 @@ public class Course {
     private Teacher insegnante;
     private List<Student> studentiIscritti;
 
-    public Course(int id, String nome, String descrizione, Teacher insegnante) {
+    @JsonCreator
+    public Course(@JsonProperty("id") int id, @JsonProperty("nome") String nome, @JsonProperty("descrizione") String descrizione) {
         this.id = new SimpleIntegerProperty(id);
         this.nome = new SimpleStringProperty(nome);
         this.descrizione = new SimpleStringProperty(descrizione);
-        this.insegnante = insegnante;
-        this.studentiIscritti = new ArrayList<>();
     }
 
     public int getId() {

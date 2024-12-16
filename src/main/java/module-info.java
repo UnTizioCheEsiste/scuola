@@ -5,6 +5,7 @@ module com.untizio {
         requires com.fasterxml.jackson.core;
         requires com.fasterxml.jackson.datatype.jsr310;
         requires java.prefs;
+        requires javafx.graphics;
     
         opens com.untizio to javafx.fxml;
         opens com.untizio.controller to javafx.fxml;
