@@ -71,6 +71,8 @@ public class CourseStudentEditDialogController {
             if (!course.getStudentiIscritti().contains(selectedStudent)) {
                 course.aggiungiStudente(selectedStudent);
                 studentTable.setItems(FXCollections.observableArrayList(course.getStudentiIscritti()));
+
+                selectedStudent.aggiungiCorso(course);
             }
             okClicked = true;
             dialogStage.close();

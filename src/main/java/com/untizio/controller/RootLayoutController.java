@@ -174,6 +174,83 @@ public class RootLayoutController {
     }
 
     /**
+     * Handles the action of creating a new course.
+     * This method clears the current course data and resets the course file path to null.
+     * It is typically called when the user wants to start a new course.
+     */
+    @FXML
+    private void handleNewCourse() {
+        app.getCourseData().clear();
+        app.setCourseFilePath(null);
+    }
+
+    /**
+     * Opens a file chooser dialog to select a JSON file and loads course data from the selected file.
+     * 
+     * This method is triggered by an FXML event. It creates a FileChooser instance, sets a filter to 
+     * only show JSON files, and opens the file chooser dialog. If a file is selected, it calls the 
+     * application's method to load course data from the selected file.
+     */
+    @FXML
+    private void handleOpenCourse() {
+        FileChooser fileChooser = new FileChooser();
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "JSON files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show open file dialog
+        File file = fileChooser.showOpenDialog(app.getPrimaryStage());
+
+        if (file != null) {
+            app.loadCourseDataFromFile(file);
+        }
+    }
+
+    /**
+     * Handles the action of saving the current course data.
+     * If a course file path is already set, it saves the course data to that file.
+     * Otherwise, it prompts the user to specify a file path to save the course data.
+     */
+    @FXML
+    private void handleSaveCourse() {
+        File courseFile = app.getCourseFilePath();
+        if (courseFile != null) {
+            app.saveCourseDataToFile(courseFile);
+        } else {
+            handleSaveCourseAs();
+        }
+    }
+
+    /**
+     * Opens a FileChooser dialog to save the course data as a JSON file.
+     * The method sets a filter to only allow saving files with a .json extension.
+     * If the user selects a file without the .json extension, it appends the extension to the file name.
+     * Finally, it calls the application's method to save the course data to the selected file.
+     */
+    @FXML
+    private void handleSaveCourseAs() {
+        FileChooser fileChooser = new FileChooser();
+
+        // Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+                "JSON files (*.json)", "*.json");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        // Show save file dialog
+        File file = fileChooser.showSaveDialog(app.getPrimaryStage());
+
+        if (file != null) {
+            // Make sure it has the correct extension
+            if (!file.getPath().endsWith(".json")) {
+                file = new File(file.getPath() + ".json");
+            }
+            app.saveCourseDataToFile(file);
+        }
+    }
+
+    /**
      * Opens an about dialog.
      */
     @FXML

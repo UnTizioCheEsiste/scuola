@@ -32,15 +32,15 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Corsi">
                      <items>
-                        <MenuItem mnemonicParsing="false" text="New" />
-                        <MenuItem mnemonicParsing="false" text="Open" />
-                        <MenuItem mnemonicParsing="false" text="Save" />
-                        <MenuItem mnemonicParsing="false" text="Save as" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleNewCourse" text="Nuovo" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleOpenCourse" text="Apri" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveCourse" text="Salva" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleSaveCourseAs" text="Salva come" />
                      </items>
                   </Menu>
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Help">
+          <Menu mnemonicParsing="false" text="Aiuto">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
             </items>
