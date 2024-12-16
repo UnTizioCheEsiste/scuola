@@ -176,7 +176,9 @@ public class CourseOverviewController {
     private void handleDeleteCourse() {
         int selectedIndex = courseTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
-            courseTable.getItems().remove(selectedIndex);
+            Course selectedCourse = courseTable.getItems().get(selectedIndex);
+            courseTable.getItems().remove(selectedCourse);
+            app.getCourseData().remove(selectedCourse);
         } else {
             // Show a warning alert if no course is selected
             Alert alert = new Alert(AlertType.WARNING);
@@ -191,10 +193,9 @@ public class CourseOverviewController {
     private void handleAddStudent() {
         Course selectedCourse = courseTable.getSelectionModel().getSelectedItem();
         if (selectedCourse != null) {
-            Student tempStudent = new Student(0, null, null, null, null);
-            boolean okClicked = app.showStudentEditDialog(tempStudent);
+            boolean okClicked = app.showCourseStudentEditDialog(selectedCourse, app.getStudentData());
             if (okClicked) {
-                selectedCourse.getStudentiIscritti().add(tempStudent);
+                showCourseDetails(selectedCourse);
             }
         } else {
             // Show a warning alert if no course is selected
@@ -210,7 +211,12 @@ public class CourseOverviewController {
     private void handleDeleteStudent() {
         int selectedIndex = studentTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
-            studentTable.getItems().remove(selectedIndex);
+            Student selectedStudent = studentTable.getItems().get(selectedIndex);
+            Course selectedCourse = courseTable.getSelectionModel().getSelectedItem();
+            if (selectedCourse != null) {
+                selectedCourse.rimuoviStudente(selectedStudent);
+                studentTable.getItems().remove(selectedIndex);
+            }
         } else {
             // Show a warning alert if no student is selected
             Alert alert = new Alert(AlertType.WARNING);

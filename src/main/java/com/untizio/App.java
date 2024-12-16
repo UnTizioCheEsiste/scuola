@@ -2,6 +2,7 @@ package com.untizio;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
 
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.untizio.controller.CourseEditDialogController;
 import com.untizio.controller.CourseOverviewController;
+import com.untizio.controller.CourseStudentEditDialogController;
 import com.untizio.controller.RootLayoutController;
 import com.untizio.controller.StudentEditDialogController;
 import com.untizio.controller.StudentOverviewController;
@@ -186,21 +188,21 @@ public class App extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("view/StudentEditDialog.fxml"));
-            AnchorPane page = loader.load();
-
+            DialogPane page = loader.load();
+    
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Modifica Studente");
+            dialogStage.setTitle("Edit Student");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
-
+    
             StudentEditDialogController controller = loader.getController();
             controller.setDialogStage(dialogStage);
             controller.setStudent(student);
-
+    
             dialogStage.showAndWait();
-
+    
             return controller.isOkClicked();
         } catch (IOException e) {
             e.printStackTrace();
@@ -261,6 +263,33 @@ public class App extends Application {
         }
     }
 
+    public boolean showCourseStudentEditDialog(Course course, ObservableList<Student> allStudents) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("view/CourseStudentEditDialog.fxml"));
+            DialogPane page = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Modifica Studenti Corso");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+
+            CourseStudentEditDialogController controller = loader.getController();
+            controller.setDialogStage(dialogStage);
+            controller.setCourse(course);
+            controller.setAllStudents(allStudents);
+
+            dialogStage.showAndWait();
+
+            return controller.isOkClicked();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public File getStudentFilePath() {
         Preferences prefs = Preferences.userNodeForPackage(App.class);
         String filePath = prefs.get("filePath", null);
@@ -292,6 +321,7 @@ public class App extends Application {
 
             setStudentFilePath(file);
         } catch (IOException e) {
+            System.out.println("Student Loading Error: " + e);
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Non è stato possibile caricare i dati");
@@ -345,16 +375,16 @@ public class App extends Application {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             List<Teacher> teacherList = mapper.readValue(file, new TypeReference<List<Teacher>>() {});
-            teacherData.clear();
-            teacherData.addAll(teacherList);
-
+            teacherData.setAll(teacherList);
+    
             setTeacherFilePath(file);
         } catch (IOException e) {
+            System.out.println("Teacher Loading Error: " + e);
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Non è stato possibile caricare i dati");
             alert.setContentText("Non è stato possibile caricare i dati dal file:\n" + file.getPath());
-
+    
             alert.showAndWait();
         }
     }
@@ -364,15 +394,18 @@ public class App extends Application {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue(file, teacherData);
-
+    
+            // Convert ObservableList to List before serialization
+            List<Teacher> teachers = new ArrayList<>(teacherData);
+            mapper.writeValue(file, teachers);
+    
             setTeacherFilePath(file);
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Non è stato possibile salvare i dati");
             alert.setContentText("Non è stato possibile salvare i dati nel file:\n" + file.getPath());
-
+    
             alert.showAndWait();
         }
     }
@@ -403,16 +436,15 @@ public class App extends Application {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             List<Course> courseList = mapper.readValue(file, new TypeReference<List<Course>>() {});
-            courseData.clear();
-            courseData.addAll(courseList);
-
+            courseData.setAll(courseList);
+    
             setCourseFilePath(file);
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Non è stato possibile caricare i dati");
             alert.setContentText("Non è stato possibile caricare i dati dal file:\n" + file.getPath());
-
+    
             alert.showAndWait();
         }
     }
@@ -422,15 +454,18 @@ public class App extends Application {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue(file, courseData);
-
+    
+            // Convert ObservableList to List before serialization
+            List<Course> courses = new ArrayList<>(courseData);
+            mapper.writeValue(file, courses);
+    
             setCourseFilePath(file);
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Non è stato possibile salvare i dati");
             alert.setContentText("Non è stato possibile salvare i dati nel file:\n" + file.getPath());
-
+    
             alert.showAndWait();
         }
     }

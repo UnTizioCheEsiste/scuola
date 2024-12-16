@@ -1,27 +1,41 @@
 package com.untizio.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Course {
-    private IntegerProperty id;
-    private StringProperty nome;
-    private StringProperty descrizione;
+
+    @JsonProperty("id")
+    private final IntegerProperty id;
+    @JsonProperty("nome")
+    private final StringProperty nome;
+    @JsonProperty("descrizione")
+    private final StringProperty descrizione;
+    @JsonProperty("insegnante")
     private Teacher insegnante;
+    @JsonProperty("studentiIscritti")
     private List<Student> studentiIscritti;
 
-    @JsonCreator
-    public Course(@JsonProperty("id") int id, @JsonProperty("nome") String nome, @JsonProperty("descrizione") String descrizione) {
+    public Course() {
+        this(0, null, null);
+    }
+
+    public Course(@JsonProperty("id") int id, 
+                  @JsonProperty("nome") String nome, 
+                  @JsonProperty("descrizione") String descrizione) {
         this.id = new SimpleIntegerProperty(id);
         this.nome = new SimpleStringProperty(nome);
         this.descrizione = new SimpleStringProperty(descrizione);
+        this.studentiIscritti = new ArrayList<>();
     }
 
     public int getId() {
@@ -68,8 +82,12 @@ public class Course {
         this.insegnante = insegnante;
     }
 
-    public List<Student> getStudentiIscritti() {
-        return studentiIscritti;
+    public ObservableList<Student> getStudentiIscritti() {
+        return FXCollections.observableArrayList(studentiIscritti);
+    }
+
+    public void setStudentiIscritti(List<Student> studentiIscritti) {
+        this.studentiIscritti = studentiIscritti;
     }
 
     public void aggiungiStudente(Student studente) {
