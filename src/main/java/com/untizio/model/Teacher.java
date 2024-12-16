@@ -3,6 +3,7 @@ package com.untizio.model;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javafx.beans.property.IntegerProperty;
@@ -14,10 +15,15 @@ import javafx.collections.ObservableList;
 
 public class Teacher {
 
+    @JsonProperty("id")
     private final IntegerProperty id;
+    @JsonProperty("nome")
     private final StringProperty nome;
+    @JsonProperty("cognome")
     private final StringProperty cognome;
+    @JsonProperty("materia")
     private final StringProperty materia;
+    @JsonIgnore
     private final ObservableList<Course> corsiInsegnati;
 
     public Teacher() {

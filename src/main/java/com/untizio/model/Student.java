@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javafx.beans.property.IntegerProperty;
@@ -12,11 +13,17 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Student {
+    @JsonProperty("id")
     private IntegerProperty id;
+    @JsonProperty("nome")
     private StringProperty nome;
+    @JsonProperty("cognome")
     private StringProperty cognome;
+    @JsonProperty("dataNascita")
     private StringProperty dataNascita;
+    @JsonProperty("classe")
     private StringProperty classe;
+    @JsonIgnore
     private List<Course> corsi;
 
     @JsonCreator

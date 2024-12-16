@@ -3,6 +3,7 @@ package com.untizio.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javafx.beans.property.IntegerProperty;
@@ -20,9 +21,9 @@ public class Course {
     private final StringProperty nome;
     @JsonProperty("descrizione")
     private final StringProperty descrizione;
-    @JsonProperty("insegnante")
+    @JsonIgnore
     private Teacher insegnante;
-    @JsonProperty("studentiIscritti")
+    @JsonIgnore
     private List<Student> studentiIscritti;
 
     public Course() {

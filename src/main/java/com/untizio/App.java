@@ -316,17 +316,22 @@ public class App extends Application {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             List<Student> studentList = mapper.readValue(file, new TypeReference<List<Student>>() {});
-            studentData.clear();
-            studentData.addAll(studentList);
-
+            studentData.setAll(studentList);
+    
+            // Rebuild references between students and courses
+            for (Student student : studentList) {
+                for (Course course : student.getCorsi()) {
+                    course.aggiungiStudente(student);
+                }
+            }
+    
             setStudentFilePath(file);
         } catch (IOException e) {
-            System.out.println("Student Loading Error: " + e);
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Non è stato possibile caricare i dati");
             alert.setContentText("Non è stato possibile caricare i dati dal file:\n" + file.getPath());
-
+    
             alert.showAndWait();
         }
     }
@@ -336,15 +341,32 @@ public class App extends Application {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            mapper.writeValue(file, studentData);
-
+    
+            // Temporarily remove circular references
+            for (Student student : studentData) {
+                for (Course course : student.getCorsi()) {
+                    course.getStudentiIscritti().remove(student);
+                }
+            }
+    
+            // Convert ObservableList to List before serialization
+            List<Student> students = new ArrayList<>(studentData);
+            mapper.writeValue(file, students);
+    
+            // Restore circular references
+            for (Student student : studentData) {
+                for (Course course : student.getCorsi()) {
+                    course.aggiungiStudente(student);
+                }
+            }
+    
             setStudentFilePath(file);
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Errore");
             alert.setHeaderText("Non è stato possibile salvare i dati");
             alert.setContentText("Non è stato possibile salvare i dati nel file:\n" + file.getPath());
-
+    
             alert.showAndWait();
         }
     }
@@ -437,6 +459,14 @@ public class App extends Application {
             mapper.registerModule(new JavaTimeModule());
             List<Course> courseList = mapper.readValue(file, new TypeReference<List<Course>>() {});
             courseData.setAll(courseList);
+    
+            // Rebuild references between courses and teachers
+            for (Course course : courseList) {
+                Teacher teacher = course.getInsegnante();
+                if (teacher != null) {
+                    teacher.aggiungiCorso(course);
+                }
+            }
     
             setCourseFilePath(file);
         } catch (IOException e) {
