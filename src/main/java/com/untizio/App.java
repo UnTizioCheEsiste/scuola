@@ -70,12 +70,6 @@ public class App extends Application {
             showCourseOverview();
         }
 
-        // Try to load last opened student file.
-        File studentFile = getStudentFilePath();
-        if (studentFile != null) {
-            loadStudentDataFromFile(studentFile);
-        }
-
         // Try to load last opened teacher file.
         File teacherFile = getTeacherFilePath();
         if (teacherFile != null) {
@@ -86,6 +80,12 @@ public class App extends Application {
         File courseFile = getCourseFilePath();
         if (courseFile != null) {
             loadCourseDataFromFile(courseFile);
+        }
+
+        // Try to load last opened student file.
+        File studentFile = getStudentFilePath();
+        if (studentFile != null) {
+            loadStudentDataFromFile(studentFile);
         }
 
         this.primaryStage.setResizable(false);
@@ -465,6 +465,11 @@ public class App extends Application {
                 Teacher teacher = course.getInsegnante();
                 if (teacher != null) {
                     teacher.aggiungiCorso(course);
+                }
+    
+                // Rebuild references between courses and students
+                for (Student student : course.getStudentiIscritti()) {
+                    student.aggiungiCorso(course);
                 }
             }
     
