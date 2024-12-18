@@ -27,16 +27,16 @@ public class Teacher {
     private final ObservableList<Course> corsiInsegnati;
 
     public Teacher() {
-        this(0, null, null, null, FXCollections.observableArrayList());
+        this(0, null, null, null);
     }
 
     @JsonCreator
-    public Teacher(@JsonProperty("id") int id, @JsonProperty("nome") String nome, @JsonProperty("cognome") String cognome, @JsonProperty("materia") String materia, @JsonProperty("corsiInsegnati") List<Course> corsiInsegnati) {
+    public Teacher(@JsonProperty("id") int id, @JsonProperty("nome") String nome, @JsonProperty("cognome") String cognome, @JsonProperty("materia") String materia) {
         this.id = new SimpleIntegerProperty(id);
         this.nome = new SimpleStringProperty(nome);
         this.cognome = new SimpleStringProperty(cognome);
         this.materia = new SimpleStringProperty(materia);
-        this.corsiInsegnati = FXCollections.observableArrayList(corsiInsegnati != null ? corsiInsegnati : FXCollections.observableArrayList());
+        this.corsiInsegnati = FXCollections.observableArrayList();
     }
 
     public int getId() {

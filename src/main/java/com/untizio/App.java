@@ -318,13 +318,6 @@ public class App extends Application {
             List<Student> studentList = mapper.readValue(file, new TypeReference<List<Student>>() {});
             studentData.setAll(studentList);
     
-            // Rebuild references between students and courses
-            for (Student student : studentList) {
-                for (Course course : student.getCorsi()) {
-                    course.aggiungiStudente(student);
-                }
-            }
-    
             setStudentFilePath(file);
         } catch (IOException e) {
             Alert alert = new Alert(AlertType.ERROR);
@@ -462,15 +455,29 @@ public class App extends Application {
     
             // Rebuild references between courses and teachers
             for (Course course : courseList) {
-                Teacher teacher = course.getInsegnante();
+                int teacherId = course.getInsegnanteId();
+                Teacher teacher = teacherData.stream()
+                                             .filter(t -> t.getId() == teacherId)
+                                             .findFirst()
+                                             .orElse(null);
+                course.setInsegnante(teacher);
                 if (teacher != null) {
                     teacher.aggiungiCorso(course);
                 }
     
                 // Rebuild references between courses and students
-                for (Student student : course.getStudentiIscritti()) {
-                    student.aggiungiCorso(course);
+                List<Student> students = new ArrayList<>();
+                for (int studentId : course.getStudenteId()) {
+                    Student student = studentData.stream()
+                                                 .filter(s -> s.getId() == studentId)
+                                                 .findFirst()
+                                                 .orElse(null);
+                    if (student != null) {
+                        students.add(student);
+                        student.aggiungiCorso(course);
+                    }
                 }
+                course.setStudentiIscritti(students);
             }
     
             setCourseFilePath(file);

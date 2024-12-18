@@ -77,6 +77,7 @@ public class CourseEditDialogController {
             course.setInsegnante(insegnanteComboBox.getValue());
 
             course.getInsegnante().aggiungiCorso(course);
+            course.setInsegnanteId(course.getInsegnante().getId());
 
             okClicked = true;
             dialogStage.close();

@@ -73,6 +73,7 @@ public class CourseStudentEditDialogController {
                 studentTable.setItems(FXCollections.observableArrayList(course.getStudentiIscritti()));
 
                 selectedStudent.aggiungiCorso(course);
+                course.aggiungiStudenteId(selectedStudent.getId());
             }
             okClicked = true;
             dialogStage.close();

@@ -154,7 +154,7 @@ public class TeacherOverviewController {
     @FXML
     private void handleAddTeacher() {
         lastTeacherId++; // Increment the lastTeacherId
-        Teacher tempTeacher = new Teacher(lastTeacherId, "", "", "", null);
+        Teacher tempTeacher = new Teacher(lastTeacherId, "", "", "");
         boolean okClicked = app.showTeacherEditDialog(tempTeacher);
         if (okClicked) {
             if (isInputValid(tempTeacher)) {

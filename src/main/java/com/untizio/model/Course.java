@@ -26,6 +26,11 @@ public class Course {
     @JsonIgnore
     private List<Student> studentiIscritti;
 
+    @JsonProperty("insegnanteId")
+    private final IntegerProperty insegnanteId;
+    @JsonProperty("studenteId")
+    private final List<Integer> studenteId;
+
     public Course() {
         this(0, null, null);
     }
@@ -37,6 +42,8 @@ public class Course {
         this.nome = new SimpleStringProperty(nome);
         this.descrizione = new SimpleStringProperty(descrizione);
         this.studentiIscritti = new ArrayList<>();
+        this.insegnanteId = new SimpleIntegerProperty();
+        this.studenteId = new ArrayList<>();
     }
 
     public int getId() {
@@ -97,6 +104,22 @@ public class Course {
 
     public void rimuoviStudente(Student studente) {
         studentiIscritti.remove(studente);
+    }
+
+    public int getInsegnanteId() {
+        return insegnanteId.get();
+    }
+
+    public void setInsegnanteId(int insegnanteId) {
+        this.insegnanteId.set(insegnanteId);
+    }
+
+    public List<Integer> getStudenteId() {
+        return studenteId;
+    }
+
+    public void aggiungiStudenteId(int studenteId) {
+        this.studenteId.add(studenteId);
     }
 
     @Override
