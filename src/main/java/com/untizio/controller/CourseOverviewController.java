@@ -1,8 +1,12 @@
 package com.untizio.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.untizio.App;
 import com.untizio.model.Course;
 import com.untizio.model.Student;
+import com.untizio.model.Teacher;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -177,14 +181,28 @@ public class CourseOverviewController {
         int selectedIndex = courseTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex >= 0) {
             Course selectedCourse = courseTable.getItems().get(selectedIndex);
-            courseTable.getItems().remove(selectedCourse);
+
+            // Remove the course from the teacher's list of courses
+            Teacher teacher = selectedCourse.getInsegnante();
+            if (teacher != null) {
+                List<Course> mutableCourses = new ArrayList<>(teacher.getCorsiInsegnati());
+                mutableCourses.remove(selectedCourse);
+                teacher.setCorsi(mutableCourses);
+            }
+
+            // Remove the course from each student's list of courses
+            for (Student student : selectedCourse.getStudentiIscritti()) {
+                student.getCorsi().remove(selectedCourse);
+            }
+
+            // Remove the course from the main course list
             app.getCourseData().remove(selectedCourse);
         } else {
-            // Show a warning alert if no course is selected
-            Alert alert = new Alert(AlertType.WARNING);
-            alert.setTitle("No Selection");
-            alert.setHeaderText("No Course Selected");
-            alert.setContentText("Please select a course in the table.");
+            // Nothing selected.
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Nessuna selezione");
+            alert.setHeaderText("Nessun Corso Selezionato");
+            alert.setContentText("Per favore, seleziona un corso nella tabella.");
             alert.showAndWait();
         }
     }
